@@ -3,7 +3,7 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @tasks = Task.all
+    @tasks = Task.all.reverse_order
   end
 
   # GET /tasks/1
@@ -28,6 +28,7 @@ class TasksController < ApplicationController
         format.turbo_stream
         format.html { redirect_to @task, notice: "Task was successfully created." }
       else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@task)}_form", partial:"form", locals:{task:@task}) }
         format.html { render :new, status: :unprocessable_entity}
       end
     end
@@ -35,10 +36,14 @@ class TasksController < ApplicationController
 
   # PATCH/PUT /tasks/1
   def update
-    if @task.update(task_params)
-      redirect_to @task, notice: "Task was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @task.update(task_params)
+        format.turbo_stream
+        format.html { redirect_to @task, notice: "Task was successfully updated."}
+      else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@task)}_form", partial:"form", locals:{task:@task}) }
+        format.html { render :edit, status: :unprocessable_entity}
+      end
     end
   end
 
