@@ -6,7 +6,13 @@ To-do List
     <%= render 'form', task: Task.new %>
   </div>
   <ul class="space-y-3" id="tasks">
-    <%= render @tasks %>
+    <%= render @todo_tasks %>
+  </ul>
+  <h3 class="text-xl mb-2 mt-8">
+  Completed Tasks
+  </h3>
+  <ul class="space-y-3" id="done-tasks">
+    <%= render @done_tasks %>
   </ul>
 </div>
  
